@@ -10,6 +10,8 @@
 \usepackage{subcaption}
 \captionsetup{compatibility=false}
 
+\usepackage[utf8]{inputenc}
+
 \begin{document}
 \mainmatter
 
@@ -20,11 +22,12 @@
 %\authorrunning{}
 %\tocauthor{}
 
-\institute{Institute of Control and Computation Engineering, \\
-Warsaw University of Technology \\
-ul. Nowowiejska 15/19, 00-665 Warsaw, Poland \\
+\institute{
+    Warsaw University of Technology,\\Institute of Control and Computation Engineering\\
+Nowowiejska 15/19, 00-665 Warsaw, Poland\\
 \email{krystian.chachula.stud@pw.edu.pl} \\
-\email{M.Stefanczyk@elka.pw.edu.pl}}
+\email{maciej.stefanczyk@ pw.edu.pl}
+}
 
 \maketitle
 
@@ -38,20 +41,21 @@ Moreover, Gazebo integration makes it possible to overlay virtual objects onto v
 \end{abstract}
 
 \section{Introduction}
-Service robotics is a branch of robotics that focuses on human-robot interactions in a common environment.
+
+\subsection{The problem}
+
 People use their sight as the most important sense when they move through their surroundings.
 It is therefore essential for service robots to use image processing.
-When robots coexist with humans, safety is highly important. \cite{haddadin2007safety}
-One of many measures to be taken is software testing.
-Testing requires test data and in the domain of image recognition this data consists of images or videos from a robot's camera. \cite{7759425}
-However, using a robot for testing can be dangerous.
-The danger stems from the fact that while testing the robot is controlled by untested software, which can lead to damaging the testing environment or the robot itself.
-Using a real robot for testing can also be tedious.
-Service robots often move slowly and returning to initial state takes time.
-But testing should be fast, so that development cycles are not slowed down by the necessity of running tests.
-This creates the need to simulate the tested robot and specifically, its one or more cameras.
+When robots coexist with humans, safety is highly important \cite{haddadin2007safety}.
+One of many measures to be taken is software testing,
+which requires test data and, in the domain of computer vision, this data consists of images or videos from a robot's camera \cite{7759425}.
+However, using a real robot for testing can be dangerous.
+The danger stems from the fact that, while testing, the robot is controlled by yet untested software, which can lead to damaging the environment, the robot itself or in the worst case scenario can harm the people.
+Using a real robot for testing can also be tedious -- after each test iteration one has to return the environment to the initial state and move robot back to the staring pose.
+To speed up the process it is possible to run the application on multiple robots \cite{levine2018learning}, but this is not the cost-effective solution.
+This creates the need to simulate the tested robot and, specifically, its one or more cameras.
 
-\subsection{Image sources}
+\subsection{State of the art}
 An effective method of gathering image data for testing is recording a video while the robot is executing a given path in the testing environment for future use.
 Another way is using simulators such as Gazebo or UnrealROX. \cite{koenig2004design,martinez2018unrealrox}
 Gazebo is widely used because of its integration with the Robot Operating System, which is a popular platform for robot development.
