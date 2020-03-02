@@ -11,9 +11,13 @@
 \captionsetup{compatibility=false}
 
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 
 % for \textdegree symbol
 \usepackage{textcomp}
+
+% comments on the margin
+\usepackage{todonotes}
 
 \begin{document}
 \mainmatter
@@ -143,13 +147,21 @@ possibility of free robot movement and interaction with the environment. As a wa
 we study the possibility of using the photos as a source for the camera image in the simulation. 
 To give the robot possibility to look around photos should cover full sphere (360\textdegree panorama or 
 full spherical photo). To have freedom of movement images from (almost) all possible robot locations should 
-be available. Finally, to not limit the solution to only single pre-recorded environemnt state, there has to be
-a way of adding the simulated/rendered objects to the scenes. This will also allow for interaction.
+be available. The position of the virtual camera can be used to select exactly one (the closest) spherical image from the set.
+Finally, to not limit the solution to only single pre-recorded environemnt state, there has to be
+a way of adding the simulated/rendered objects to the scenes. This will also allow for interaction. Schematic
+diagram of proposed system is presented on fig.~\ref{fig:flow}.
 
 The rest of the paper is structured as follows. In section~\ref{sec:spherical} we show the methods of creating
 a single photo from a spherical image. Following section introduces a way of dealing with robot movement.
 Integration with Gazebo simulator and merging with the rendered overlays is presented in section~\ref{sec:gazebo}.
 A case study for a prepared system is presented in section~\ref{sec:evaluation}, followed by the conlusions.
+
+\begin{figure}[ht!]
+\missingfigure[figheight=6cm]{Bardziej kompaktowy schemat działania systemu z dodanym gazebo}
+\caption{Schematic diagram of proposed simulation system}
+\label{fig:flow}
+\end{figure}
 
 % Images from a spherical camera can be used to photorealistically simulate an environment.
 % The idea is visualized on Fig. \ref{fig:flow}.
@@ -166,7 +178,7 @@ A case study for a prepared system is presented in section~\ref{sec:evaluation},
 
 %\subsection{Nomenclature}
 
-There are three important terms used throgh the article. A \textbf{spherical camera} is a type of camera with a field of view that covers the entire sphere and a \textbf{regular camera} is a type of camera with a field of view close to $90$ degrees.
+There are different camera types used throgh the article. A \textbf{spherical camera} is a type of camera with a field of view that covers the entire sphere and a \textbf{regular camera} is a type of camera with a field of view close to $90$ degrees.
 The camera that belongs to a robot in sumulation is referred to as a \textbf{virtual camera}.
 A \textbf{projection camera} is an entity that projects a 3D scene to a 2D image in computer graphics.
 
@@ -174,53 +186,93 @@ A \textbf{projection camera} is an entity that projects a 3D scene to a 2D image
 
 
 \section{Transforming spherical images}
+\label{sec:spherical}
 
 In order to transform a spherical image to a regular image one can utilize 3D computer graphics.
 Not only is this method simple, but its implementation can utilize hardware acceleration.
 
 A sphere is a 3D closed surface where every point on the sphere is the same distance from its origin.
-The equation of a sphere with center at point $(x_0, y_0, z_0)$ and radius $R$ is as follows:
-\begin{equation}
-    (x - x_0)^2 + (y - y_0)^2 + (z - z_0)^2 = R^2
-\end{equation}
-
+% The equation of a sphere with center at point $(x_0, y_0, z_0)$ and radius $R$ is as follows:
+% \begin{equation}
+%     (x - x_0)^2 + (y - y_0)^2 + (z - z_0)^2 = R^2
+% \end{equation}
 Since only a finite number of points can be drawn, a sphere will need to be approximated by drawing a subset of its points.
 Those points can be selected by creating a UV Sphere.
-A UV Sphere consists of vertices that are created by performing angular steps in the spherical coordinate system.
+A UV Sphere consists of vertices that are created by performing angular steps in the spherical coordinate system (fig.~\ref{fig:spheres}a).
 Cartesian points are generated using these equations:
 \begin{eqnarray}
-    x &=& R \cdot \sin \theta \cdot \cos \varphi \\
+    x &=& R \cdot \sin \theta \cdot \cos \varphi \nonumber \\
     y &=& R \cdot \sin \theta \cdot \sin \varphi \\
-    z &=& R \cdot \cos \theta
+    z &=& R \cdot \cos \theta \nonumber
 \end{eqnarray}
 where $R$ is the radius of the sphere, $\theta \in [0, \pi]$ -- polar angle and $\varphi \in [0, 2\pi)$ -- azimuthal angle.
 
-Then the sphere has to be textured with the spherical image.
-Most spherical cameras create images in the form of equirectangular projections.
-The process of texturing a UV sphere with an image in the form of this projection is fairly straightforward. \cite{greene1986environment} 
+Then the sphere has to be textured with the spherical image (fig.~\ref{fig:spheres}b).
+Most spherical cameras create images in the form of equirectangular projections, and, without the loss
+of generality of the solution, we assumed images in that format are available.
+The process of texturing a UV sphere with an image in the form of this projection is fairly straightforward \cite{greene1986environment}. 
 Every point on the sphere can be mapped to a point on the texture using the following equations:
+% \begin{eqnarray}
+%     x_t &=& R(\varphi - \varphi_0) \cos \theta_1 \nonumber \\
+%     y_t &=& R(\theta - \theta_1)
+% \end{eqnarray}
+% where $\varphi_0$, $\theta_1$ -- center coordinates.
+% Those equations can be simplified by assuming $\varphi_0 = 0$ and $\theta_1 = 0$.
+% The sphere can also be assumed to be normalized ($R = 1$), which further simplifies the equations.
 \begin{eqnarray}
-    x_t &=& R(\varphi - \varphi_0) \cos \theta_1 \\
-    y_t &=& R(\theta - \theta_1)
-\end{eqnarray}
-where $\varphi_0$, $\theta_1$ -- center coordinates.
-Those equations can be simplified by assuming $\varphi_0 = 0$ and $\theta_1 = 0$.
-The sphere can also be assumed to be normalized ($R = 1$), which further simplifies the equations.
-\begin{eqnarray}
-    x_t &=& \varphi \\
+    x_t &=& \varphi \nonumber \\
     y_t &=& \theta
 \end{eqnarray}
 
-Having textured the sphere, now a projection camera can be placed in its center.
-The image from this camera is a regular image that is the result of this transformation.
+Having textured the sphere, now a projection camera can be placed in its center (fig.~\ref{fig:spheres}c).
+Its parameters (field of view and resolution) are set to match the robot's virtual camera.
+The image from this camera is a regular image as seen by the robot looking in given direction.
+\todo{Wstawić obrazek ze strukturą sfery (przed oteksturowaniem) i po nałożeniu tekstury}{}
+
+\begin{figure}[ht!]
+    \centering
+    a) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/sphere}
+    b) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/sphere}
+    c) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/sphere}
+    \caption{Creating regular image from the spherical photo}
+    \label{fig:spheres}
+\end{figure}
+
+\section{Interpolation}
+\label{sec:iterpolate}
+
+
+The fact that always the nearest spherical image is used for rendering poses a significant issue.
+This problem is visualized on Fig.~\ref{fig:interpolation}a.
+The dots represent the set of spherical images (top-down view) and the grid divides the surface into regions tied to a spherical image at its center.
+Camera icons symbolize exemplary positions and orientations of virtual cameras with equal parameters.
+All cameras use the same spherical image for simulation (the closest image is marked orange).
+Moreover, all cameras have the same orientation relative to the global reference frame.
+This means that the same regular image would be produced for all the cameras.
+
+\begin{figure}[!ht]
+    \centering
+    a) \includegraphics[width=0.45\textwidth]{img/interpolation/virt.pdf}
+    b) \includegraphics[width=0.45\textwidth]{img/interpolation/proj.pdf}
+    \caption{Interpolation challenges: a) arrangement resulting in identical generated images; b) the method of interpolating camera views}
+    \label{fig:interpolation}
+\end{figure}
+
+A simple solution to this problem would be to mimic the position of the virtual camera relative 
+to a region with the position of the projection camera thus creating the ilusion of moving closer 
+to certain objects as visualized in Fig.~\ref{fig:interpolation}b. This solution is not perfect,
+as there will be no parallax visible, but with the photos sampled sufficiently dense the effect is 
+satisfactory.
 
 \section{Gazebo integration}
+\label{sec:gazebo}
 
 Generated images can be further processed in order to make this solution more versatile.
 Namely, images from Gazebo camera can be overlaid onto those generated images in order to add objects to the simulation.
 Fig. \ref{fig:join} depicts an example of such process.
 This provides additional simulation features mentioned in the introduction.
 It enables the tester to modify the testing environment and provides the means of interaction of the simulated robot with the environment by the means of the Gazebo simulator.
+
 \begin{figure}[!ht]
     \centering
     \begin{subfigure}{.46\textwidth}
@@ -242,42 +294,11 @@ It enables the tester to modify the testing environment and provides the means o
     \label{fig:join}
 \end{figure}
 
-\section{Interpolation}
 
-The fact that always the nearest spherical image is used for rendering poses a significant issue.
-This problem is visualized on Fig. \ref{fig:interpolation_problem}.
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.75\textwidth]{img/drawio/interpolation-1.pdf}
-    \caption{Problematic arrangement resulting in identical generated images}
-    \label{fig:interpolation_problem}
-\end{figure}
+\section{Evaluation}
+\label{sec:evaluation}
 
-The dots represent the set of spherical images (top-down view) and the grid divides the surface into regions tied to a spherical image at its center.
-Camera icons symbolize exemplary positions and orientations of virtual cameras with equal parameters.
-All cameras use the same spherical image for simulation (the closest image is marked orange).
-Moreover, all cameras have the same orientation relative to the global reference frame.
-This means that the same regular image would be produced for all the cameras.
-
-A simple solution to this problem would be to mimic the position of the virtual camera relative to a region with the position of the projection camera thus creating the ilusion of moving closer to certain objects as visualized in Fig. \ref{fig:interpolation}.
-\begin{figure}[!ht]
-    \begin{subfigure}{\textwidth}
-        \centering
-        \includegraphics[width=0.9\linewidth]{img/drawio/interpolation-2.pdf}
-        \caption{}
-        \label{fig:interpolation1}
-    \end{subfigure}
-    \begin{subfigure}{\textwidth}
-        \centering
-        \includegraphics[width=0.9\linewidth]{img/drawio/interpolation-3.pdf}
-        \caption{}
-        \label{fig:interpolation2}
-    \end{subfigure}
-    \caption{The method of interpolating camera views}
-    \label{fig:interpolation}
-\end{figure}
-
-\section{A set of spherical images}
+\subsection{A set of spherical images}
 
 A set of spherical images can be created using hardware like shown on Fig. \ref{fig:rig}.
 It consists of a rail and a cart to which a monopod has been fixed.
@@ -303,7 +324,6 @@ It also automatically tags images with the correct position.
     \label{fig:app}
 \end{figure}
 
-\section{Evaluation}
 
 The whole solution was evaluated by comparing generated images with images from a real robot.
 For this purpose the TIAGo robot was used.
