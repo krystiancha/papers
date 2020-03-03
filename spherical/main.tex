@@ -267,30 +267,25 @@ satisfactory.
 \section{Gazebo integration}
 \label{sec:gazebo}
 
+So far, the robot is able to look around and move through the prepared environment. 
 Generated images can be further processed in order to make this solution more versatile.
-Namely, images from Gazebo camera can be overlaid onto those generated images in order to add objects to the simulation.
+As the position and orientation of vierual camera is known, and its parameters are the same
+as the projection camera, 3D view rendered in Gazebo can be overlaid onto the photo.
 Fig. \ref{fig:join} depicts an example of such process.
-This provides additional simulation features mentioned in the introduction.
-It enables the tester to modify the testing environment and provides the means of interaction of the simulated robot with the environment by the means of the Gazebo simulator.
+In order to remove unwanted objects from the image additional plugin to the Gazebo simulator
+was prepared to hide the objects from rendering in virtual camera, keeping them 
+visible for other sensors (like laser scanner or sonars), thus keeping the obstacle avoidance
+still working. This provides additional simulation features mentioned in the introduction. 
+It enables the tester to modify the testing environment and provides the means of interaction 
+of the simulated robot with the environment by the means of the Gazebo simulator.
 
 \begin{figure}[!ht]
     \centering
-    \begin{subfigure}{.46\textwidth}
-        \includegraphics[width=\linewidth]{img/gazebo_integration/sim.jpg}
-        \caption{Image generated from a spherical image}
-        \vspace*{1em}
-    \end{subfigure}\hfill%
-    \begin{subfigure}{.46\textwidth}
-        \includegraphics[width=\linewidth]{img/gazebo_integration/gazebo.jpg}
-        \caption{Image from Gazebo camera}
-        \vspace*{1em}
-    \end{subfigure}
-    \begin{subfigure}{\textwidth}
-        \centering
-        \includegraphics[width=0.5\linewidth]{img/gazebo_integration/sum.jpg}
-        \caption{The result}
-    \end{subfigure}
-    \caption{Adding virtual objects to generated images}
+        \includegraphics[width=0.33\textwidth,trim=29cm 0 0 5cm,clip]{img/gazebo_integration/sim.jpg}\hfill%
+        \includegraphics[width=0.33\textwidth,trim=29cm 0 0 5cm,clip]{img/gazebo_integration/gazebo.jpg}\hfill%
+        \includegraphics[width=0.33\textwidth,trim=29cm 0 0 5cm,clip]{img/gazebo_integration/sum.jpg}\\
+        \hfill (a) \hfill\hfill (b) \hfill\hfill (c) \hfill~
+    \caption{Adding virtual objects (b) to the generated images (a)}
     \label{fig:join}
 \end{figure}
 
