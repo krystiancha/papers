@@ -33,7 +33,7 @@
     Warsaw University of Technology,\\Institute of Control and Computation Engineering\\
 Nowowiejska 15/19, 00-665 Warsaw, Poland\\
 \email{krystian.chachula.stud@pw.edu.pl} \\
-\email{maciej.stefanczyk@ pw.edu.pl}
+\email{maciej.stefanczyk@pw.edu.pl}
 }
 
 \maketitle
@@ -329,13 +329,22 @@ i ładowaniu zdjęć za wczasu (jeśli zostanie miejsce)}
 
 \subsection{Grid resolution and interpolation parameters}
 
+Proper distance between consecutive photos is not easy to decide and depends on the
+actual environment. Photos captured to sparce will result in big jumps when camera
+moves between different grid points. Too dense and image loading and decoding
+times will limit the speed of the robot in simulation to unacceptable values.
+\todo[inline]{Jeden akapit tekstu plus obrazki dotyczące doboru wielkości oczka siatki}
+
 \subsection{Collecting photos of the target environment}
 
-A set of spherical images can be created using hardware like shown on Fig. \ref{fig:rig}.
+Finally, when all the parameters are selected, a set of spherical images can be created.
+To facilitate the whole process we've created helper hardware and software.
+For accurate photo capture and straight camera movement the device on Fig. \ref{fig:rig} was used.
 It consists of a rail and a cart to which a monopod has been fixed.
-At the other end of the monopod there is a mounting system for the camera.
-A graduation was applied to the rail in order to allow precise positioning of the cart.
-In order to guide the rail, a graduation was also applied to the floor.
+At the other end of the monopod there is a mounting point for the camera.
+A grid marks were put on the rail in order to allow precise positioning of the cart.
+Similar marks were put on the floor in order to guide the rail.
+
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.49\textwidth]{img/rig/calosc.jpg}\hfill%
@@ -345,14 +354,15 @@ In order to guide the rail, a graduation was also applied to the floor.
     \label{fig:rig}
 \end{figure}
 
-In the chosen room 404 pictures were taken in $20 cm$ intervals.
-The whole process lasted 2 hours 17 minutes and 20 seconds, which yields approximately 20 seconds for 
-one picture or 3 pictures a minute.
+To simplify the process and keep track of photos that are already taken and still waiting to 
+be captured, an application was created (Fig. \ref{fig:rig}).
+It allows for selecting points and sending requests to the camera for taking pictures using the
+Open Spherical Camera API. It also automatically tags the images with the correct position.
 
-In the process of taking pictures, to simplify keeping track of the areas already covered with 
-spherical images, an application was created (Fig. \ref{fig:rig}).
-The application allows selecting points and making requests of taking pictures to the camera.
-It also automatically tags images with the correct position.
+In the selected room, 404 pictures were taken in $20 cm$ intervals, covering the living room part,
+the kitchen and part of the corridor. The whole process took 2 hours and 17 minutes,
+which yields approximately 3 pictures taken per minute. 
+
 
 
 
@@ -370,7 +380,7 @@ Finally, images from both sources were compared as seen on Fig. \ref{fig:sim_vs_
     \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_biurko.jpg}\hfill%
     \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_fotel.jpg}\hfill%
     \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_kuchnia_blat.jpg}\\
-    \caption{Images generated in simulation (top row) and taken by Tiago robot (bottom row)}
+    \caption{Images generated in simulation (top) and taken by the robot (bottom)}
     \label{fig:sim_vs_tiago}
 \end{figure}
 
