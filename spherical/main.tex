@@ -364,8 +364,6 @@ the kitchen and part of the corridor. The whole process took 2 hours and 17 minu
 which yields approximately 3 pictures taken per minute. 
 
 
-
-
 The whole solution was evaluated by comparing generated images with images from a real robot.
 For this purpose the TIAGo robot was used.
 It was booted up and manually controlled in order to take pictures.
@@ -384,12 +382,28 @@ Finally, images from both sources were compared as seen on Fig. \ref{fig:sim_vs_
     \label{fig:sim_vs_tiago}
 \end{figure}
 
-The images differ mainly in color appearance and are otherwise nearly identical.
-The mentioned color issue can be resolved by the means of color correction.
-Those results prove that using the proposed solution a set of spherical images can be used to replace a real robot in software testing.
-
 \section{Conclusions}
 
+The article presented the idea and exemplary application for the spherical camera based 
+simulator for service robots. System was tested by comparing images generated in simulation
+with those gathered by the real robot. The images differ mainly in color appearance 
+and are otherwise nearly identical. The mentioned color issue can be resolved by the 
+means of color correction. Those results prove that using the proposed solution a set 
+of spherical images can be used to replace a real robot in software testing.
+
+There are some issues in the system that can be improved. The process of photo acquisition
+at the moment is highly manual labour. For each photo one has to move the camera, hide from
+the camera view and gather a photo. In its current form it takes around 8 minutes per square meter.
+The natural extension would be to utilize a robotic platform to move the camera around and
+take photos automatically.
+
+Manual photo capturing results also in slight misalignments between consecutive frames.
+Photo stabilization techniques could be implemented to calculate angular offsets for each
+image.
+
+Created photo collection can also be extended with depth information calculated from multiview
+structure estimation. This would make the interpolation process work better and allow for, 
+possibly, grid with bigger steps.
 
 \section*{Acknowledgments}
 \label{sec:acknowledgments}
