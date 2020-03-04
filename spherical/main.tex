@@ -190,6 +190,7 @@ A \textbf{projection camera} is an entity that projects a 3D scene to a 2D image
 
 In order to transform a spherical image to a regular image one can utilize 3D computer graphics.
 Not only is this method simple, but its implementation can utilize hardware acceleration.
+\todo{Można dopisać odniesienia do innych rozwiązań rzutujących panoramki}{}
 
 A sphere is a 3D closed surface where every point on the sphere is the same distance from its origin.
 % The equation of a sphere with center at point $(x_0, y_0, z_0)$ and radius $R$ is as follows:
@@ -296,9 +297,39 @@ of the simulated robot with the environment by the means of the Gazebo simulator
 \section{Evaluation}
 \label{sec:evaluation}
 
-\subsection{A set of spherical images}
+The simulation system presented above was tested in our robotics laboratory. At first individual modules
+and system parameters were evaluated, followed by the partial scan of the room. Prepared environment is 
+meant to be used with the Tiago robot, applied to service tasks related with elderly care and assistance.
+
+\subsection{Camera selection}
+
+In order to acquire full spherical photo, a dedicated camera setup is required. Nowadays, there are different 
+possibilities to achieve that, without the need for building multiple camera rig from scratch. If the price 
+doesn't matter, Ladybug5+ from Flir is the option. Its precalibrated 6 cameras provides 360\textdegree\ 
+panorama with 8K resolution. On the consumer side of the market there are a few different devices to choose from,
+most of them built from two fish-eye cameras facing in opposite directions. We chose the Theta V camera from Ricoh. 
+This camera is capable of on-board image stitching to the equirectangular projection with final resolution
+$5376\times2688$ pixels (created from two 4K photos). Another useful feature is possibility to capture
+and transfer photos using WiFi. Average angular resolution of selected camera is around 15 px/\textdegree, 
+which is more than the 10 px/\textdegree\ of a robots camera. 
+
+\subsection{Rendering performance}
+
+All the advantages of even the most advanced and photorealistic simulation are useless if its performance 
+doesn't allow for (near)realtime work. There are to independent factors in photo rendering that can limit
+the simulation performance. When the robot moves inside a single cell (in range of a single spherical
+photo) only the rendering time is important. For our system it takes \todo{wpisać ile zajmuje}{xxx ms} to
+render single VGA view. This allows us for simulating the camera with \todo{wstawić}{yyy FPS}. 
+
+The other latency is a result of loading spherical photo from disc and decoding it. 
+\todo[inline]{Dopisz o rozdzielczości zdjęcia i czasie ładowania oraz wprowadzanych przez to ograniczeniach
+na maksymalną szybkość robota w symulacji. Tutaj można dopisać też coś o predykcji kierunku ruchu
+i ładowaniu zdjęć za wczasu (jeśli zostanie miejsce)}
 
 
+\subsection{Grid resolution and interpolation parameters}
+
+\subsection{Collecting photos of the target environment}
 
 A set of spherical images can be created using hardware like shown on Fig. \ref{fig:rig}.
 It consists of a rail and a cart to which a monopod has been fixed.
@@ -307,22 +338,22 @@ A graduation was applied to the rail in order to allow precise positioning of th
 In order to guide the rail, a graduation was also applied to the floor.
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/rig/calosc.jpg}
-    \caption{Hardware used for the creation of the image set}
+    \includegraphics[width=0.49\textwidth]{img/rig/calosc.jpg}\hfill%
+    \includegraphics[width=0.49\textwidth]{img/creator.png}\\
+    %\hfill (a) \hfill \hfill (b) \hfill ~\\
+    \caption{Hardware and software used for the creation of the image set}
     \label{fig:rig}
 \end{figure}
-In the chosen room 404 pictures were taken in $20 cm$ intervals.
-The whole process lasted 2 hours 17 minutes and 20 seconds, which yields approximately 20 seconds for one picture or 3 pictures a minute.
 
-In the process of taking pictures, to simplify keeping track of the areas already covered with spherical images, an application was created (Fig. \ref{fig:app}).
+In the chosen room 404 pictures were taken in $20 cm$ intervals.
+The whole process lasted 2 hours 17 minutes and 20 seconds, which yields approximately 20 seconds for 
+one picture or 3 pictures a minute.
+
+In the process of taking pictures, to simplify keeping track of the areas already covered with 
+spherical images, an application was created (Fig. \ref{fig:rig}).
 The application allows selecting points and making requests of taking pictures to the camera.
 It also automatically tags images with the correct position.
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.75\textwidth]{img/creator.png}
-    \caption{Application created to aid in image set creation}
-    \label{fig:app}
-\end{figure}
+
 
 
 The whole solution was evaluated by comparing generated images with images from a real robot.
@@ -333,43 +364,13 @@ Finally, images from both sources were compared as seen on Fig. \ref{fig:sim_vs_
 
 \begin{figure}[!ht]
     \centering
-    \begin{subfigure}{0.46\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sim_vs_tiago/tia_biurko.jpg}
-        \caption{}
-        \vspace*{1em}
-    \end{subfigure}\hfill%
-    \begin{subfigure}{0.46\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sim_vs_tiago/sim_biurko.jpg}
-        \caption{}
-        \vspace*{1em}
-    \end{subfigure}
-    \begin{subfigure}{0.46\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sim_vs_tiago/tia_fotel.jpg}
-        \caption{}
-        \vspace*{1em}
-    \end{subfigure}\hfill%
-    \begin{subfigure}{0.46\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sim_vs_tiago/sim_fotel.jpg}
-        \caption{}
-        \vspace*{1em}
-    \end{subfigure}
-    \begin{subfigure}{0.46\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sim_vs_tiago/tia_kuchnia_blat.jpg}
-        \caption{}
-        \vspace*{1em}
-    \end{subfigure}\hfill%
-    \begin{subfigure}{0.46\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sim_vs_tiago/sim_kuchnia_blat.jpg}
-        \caption{}
-        \vspace*{1em}
-    \end{subfigure}
-    \caption{Images taken by TIAGo (left) and images from a virtual camera (right)}
+    \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/sim_biurko.jpg}\hfill%
+    \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/sim_fotel.jpg}\hfill%
+    \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/sim_kuchnia_blat.jpg}\\
+    \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_biurko.jpg}\hfill%
+    \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_fotel.jpg}\hfill%
+    \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_kuchnia_blat.jpg}\\
+    \caption{Images generated in simulation (top row) and taken by Tiago robot (bottom row)}
     \label{fig:sim_vs_tiago}
 \end{figure}
 
@@ -377,9 +378,14 @@ The images differ mainly in color appearance and are otherwise nearly identical.
 The mentioned color issue can be resolved by the means of color correction.
 Those results prove that using the proposed solution a set of spherical images can be used to replace a real robot in software testing.
 
-\clearpage
+\section{Conclusions}
 
-%\nocite{*}
+
+\section*{Acknowledgments}
+\label{sec:acknowledgments}
+This work was funded within the INCARE AAL-2017-059 project "Integrated Solution for Innovative Elderly
+Care" by the AAL JP and co-funded by the AAL JP countries.
+
 \bibliographystyle{unsrt}
 \bibliography{bibliography}
 
