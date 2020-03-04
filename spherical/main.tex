@@ -41,13 +41,13 @@ Nowowiejska 15/19, 00-665 Warsaw, Poland\\
 \begin{abstract}
 
     Safety is one of the most important factors in robotics, especially when robots have to 
-    colaborate with people in common environment. Testing the physical systems, however, must
+    collaborate with people in common environment. Testing the physical systems, however, must
     focus on much more than just a software. One of the common steps in robotic system development
     is utilization of simulators, which are very good for tasks like navigation or manipulation.
     Testing vision systems is more challenging, as the simulated data often is far from the
-    real camera readings. In this paper we show the advantages of using the spherical camera
+    real camera readings. In this paper, we show the advantages of using the spherical camera
     for recording the sequences of test images and a way to integrate those with existing
-    robotic simulator. Presented system has also the possibility to be extended with rendered
+    robotic simulator. The presented system has also the possibility to be extended with rendered
     objects to further improve its usability.
 
 % A set of spherical images can be used to obtain photorealistic images from a simulated regular camera.
@@ -261,8 +261,11 @@ This means that the same regular image would be produced for all the cameras.
 A simple solution to this problem would be to mimic the position of the virtual camera relative 
 to a region with the position of the projection camera thus creating the ilusion of moving closer 
 to certain objects as visualized in Fig.~\ref{fig:interpolation}b. This solution is not perfect,
-as there will be no parallax visible, but with the photos sampled sufficiently dense the effect is 
+as there will be no parallax visible, but with the photos sampled 
+\todo{Trzeba pokazać zdjęcia z różną siatką, chyba przy okazji testów}{sufficiently dense} the effect is 
 satisfactory.
+
+\todo[inline]{Można jeszcze dopisać kilka zdań o prefetchingu zdjęć (albo tutaj albo przy testach).}
 
 \section{Gazebo integration}
 \label{sec:gazebo}
@@ -294,6 +297,8 @@ of the simulated robot with the environment by the means of the Gazebo simulator
 \label{sec:evaluation}
 
 \subsection{A set of spherical images}
+
+
 
 A set of spherical images can be created using hardware like shown on Fig. \ref{fig:rig}.
 It consists of a rail and a cart to which a monopod has been fixed.
