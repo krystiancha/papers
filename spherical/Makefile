@@ -22,6 +22,7 @@ img/drawio: img/drawio/main.pdf
 	pdftk $< cat 13-13 output $@/preloading-5.pdf
 	pdftk $< cat 14-14 output $@/preloading-6.pdf
 	pdftk $< cat 15-15 output $@/preloading-7.pdf
+	pdfcrop $@/flow.pdf $@/flow.pdf
 
 check:
 	languagetool \
