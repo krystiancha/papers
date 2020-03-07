@@ -261,9 +261,7 @@ This means that the same regular image would be produced for all the cameras.
 A simple solution to this problem would be to mimic the position of the virtual camera relative 
 to a region with the position of the projection camera thus creating the ilusion of moving closer 
 to certain objects as visualized in Fig.~\ref{fig:interpolation}b. This solution is not perfect,
-as there will be no parallax visible, but with the photos sampled 
-\todo{Trzeba pokazać zdjęcia z różną siatką, chyba przy okazji testów}{sufficiently dense} the effect is 
-satisfactory.
+as there will be no parallax visible, but with the photos sampled sufficiently dense the effect is satisfactory.
 
 \todo[inline]{Można jeszcze dopisać kilka zdań o prefetchingu zdjęć (albo tutaj albo przy testach).}
 
@@ -336,7 +334,21 @@ Proper distance between consecutive photos is not easy to decide and depends on 
 actual environment. Photos captured to sparce will result in big jumps when camera
 moves between different grid points. Too dense and image loading and decoding
 times will limit the speed of the robot in simulation to unacceptable values.
-\todo[inline]{Jeden akapit tekstu plus obrazki dotyczące doboru wielkości oczka siatki}
+
+In order to make such a decision, first we created a relatively small but dense spherical photo set.
+Then example images were generated for a given position and orientation of the virtual camera using that set.
+Next we made the grid more sparse by selecting every second, third, fourth, etc. photo from the set and generated images for each step.
+Some of the generated images can be seen on Fig. \ref{fig:grid_sizes}.
+The grid resolution of 20 cm provided a good balance between the quality of the simulation and the time needed for the creation of the photo set.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.33\textwidth]{img/grid_sizes/10}\hfill%
+    \includegraphics[width=0.33\textwidth]{img/grid_sizes/50}\hfill%
+    \includegraphics[width=0.33\textwidth]{img/grid_sizes/100}\\
+    \caption{Example images generated with grid resolutions of 20, 100 and 200 cm.}
+    \label{fig:grid_sizes}
+\end{figure}
 
 \subsection{Collecting photos of the target environment}
 
