@@ -318,12 +318,16 @@ which is more than the 10 px/\textdegree\ of a robots camera.
 All the advantages of even the most advanced and photorealistic simulation are useless if its performance 
 doesn't allow for (near)realtime work. There are to independent factors in photo rendering that can limit
 the simulation performance. When the robot moves inside a single cell (in range of a single spherical
-photo) only the rendering time is important. For our system it takes \todo{upewnić się}{6 ms} to
-render single VGA view. This allows us for simulating the camera with \todo{upewnić się}{167 FPS}. 
+photo) only the rendering time is important. For our system it takes on average 0.365 ms to
+render single VGA view. This allows us for simulating the camera with 2740 FPS. 
 
-The other latency is a result of loading spherical photo from disc and decoding it. 
-\todo[inline]{Dopisz o rozdzielczości zdjęcia i czasie ładowania oraz wprowadzanych przez to ograniczeniach
-na maksymalną szybkość robota w symulacji. Tutaj można dopisać też coś o predykcji kierunku ruchu
+The other latency is a result of loading spherical photo from disk, decoding it and loading it into the memory of the video card.
+A single 5376 $\times$ 2688 pixels JPEG image takes on average $t = 198.672\,ms$ to load and decode on our system.
+This further limits the FPS to 5 if the images are loaded synchronously.
+Given a grid resolution of $d = 20\,cm$, if the images were loaded asynchronously and the path of the robot could not be predicted, the maximum velocity of the robot in simulation would be equal to $v_{max} = \frac{d / {2}}{2t} \approx 0.25 \frac{m}{s}$.
+However, if the path of the robot is known or can be predicted, the images can be loaded in advance, which would migitate the negative impact of the load latency on the robot's maximum speed.
+In this case $v_{max}$ depends on the amount of available memory.
+\todo[inline]{Tutaj można dopisać też coś o predykcji kierunku ruchu
 i ładowaniu zdjęć za wczasu (jeśli zostanie miejsce)}
 
 
