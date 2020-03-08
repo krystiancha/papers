@@ -69,7 +69,7 @@ When robots coexist with humans, safety is highly important \cite{haddadin2007sa
 One of many measures to be taken is software testing,
 which requires test data and, in the domain of computer vision, this data consists of images or videos from a robot's camera \cite{7759425}.
 However, using a real robot for testing can be dangerous.
-The danger stems from the fact that, while testing, the robot is controlled by yet untested software, which can lead to damaging the environment, the robot itself or in the worst case scenario can harm the people.
+The danger stems from the fact that, while testing, the robot is controlled by yet untested software, which, in case of service robots, can be complicated \cite{Dudek-multitasking-romoco-2019-twiki}. This can lead to damaging the environment, the robot itself or in the worst case scenario can harm the people.
 Using a real robot for testing can also be tedious -- after each test iteration one has to return the environment to the initial state and move robot back to the staring pose.
 To speed up the process it is possible to run the application on multiple robots \cite{levine2018learning}, but this is not the cost-effective solution.
 This creates the need to simulate the tested robot and, specifically, its one or more cameras.
@@ -145,7 +145,7 @@ in tab.~\ref{tab:simulation_methods} we can see, that fulfilling all the require
 Using prerecorded video/images has the biggest photorealism (as those are photos). Using the 3D simulators gives 
 possibility of free robot movement and interaction with the environment. As a way to combine both worlds
 we study the possibility of using the photos as a source for the camera image in the simulation. 
-To give the robot possibility to look around photos should cover full sphere (360\textdegree panorama or 
+To give the robot possibility to look around photos should cover full sphere (360\textdegree\ panorama or 
 full spherical photo). To have freedom of movement images from (almost) all possible robot locations should 
 be available. The position of the virtual camera can be used to select exactly one (the closest) spherical image from the set.
 Finally, to not limit the solution to only single pre-recorded environemnt state, there has to be
@@ -200,11 +200,9 @@ Since only a finite number of points can be drawn, a sphere will need to be appr
 Those points can be selected by creating a UV Sphere.
 A UV Sphere consists of vertices that are created by performing angular steps in the spherical coordinate system (fig.~\ref{fig:spheres}a).
 Cartesian points are generated using these equations:
-\begin{eqnarray}
-    x &=& R \cdot \sin \theta \cdot \cos \varphi \nonumber \\
-    y &=& R \cdot \sin \theta \cdot \sin \varphi \\
-    z &=& R \cdot \cos \theta \nonumber
-\end{eqnarray}
+\begin{equation}
+    x = R \cdot \sin \theta \cdot \cos \varphi \quad y = R \cdot \sin \theta \cdot \sin \varphi \quad z = R \cdot \cos \theta \nonumber
+\end{equation}
 where $R$ is the radius of the sphere, $\theta \in [0, \pi]$ -- polar angle and $\varphi \in [0, 2\pi)$ -- azimuthal angle.
 
 Then the sphere has to be textured with the spherical image (fig.~\ref{fig:spheres}b).
@@ -219,10 +217,9 @@ Every point on the sphere can be mapped to a point on the texture using the foll
 % where $\varphi_0$, $\theta_1$ -- center coordinates.
 % Those equations can be simplified by assuming $\varphi_0 = 0$ and $\theta_1 = 0$.
 % The sphere can also be assumed to be normalized ($R = 1$), which further simplifies the equations.
-\begin{eqnarray}
-    x_t &=& \varphi \nonumber \\
-    y_t &=& \theta
-\end{eqnarray}
+\begin{equation}
+    x_t = \varphi \nonumber \quad y_t = \theta
+\end{equation}
 
 Having textured the sphere, now a projection camera can be placed in its center (fig.~\ref{fig:spheres}c).
 Its parameters (field of view and resolution) are set to match the robot's virtual camera.
@@ -282,12 +279,13 @@ of the simulated robot with the environment by the means of the Gazebo simulator
 
 \begin{figure}[!ht]
     \centering
-        \includegraphics[width=0.33\textwidth,trim=29cm 0 0 5cm,clip]{img/gazebo_integration/sim.jpg}\hfill%
-        \includegraphics[width=0.33\textwidth,trim=29cm 0 0 5cm,clip]{img/gazebo_integration/gazebo.jpg}\hfill%
-        \includegraphics[width=0.33\textwidth,trim=29cm 0 0 5cm,clip]{img/gazebo_integration/sum.jpg}\\
+        \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/sim.jpg}\hfill%
+        \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/gazebo.jpg}\hfill%
+        \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/sum.jpg}\\
         \hfill (a) \hfill\hfill (b) \hfill\hfill (c) \hfill~
     \caption{Adding virtual objects (b) to the generated images (a)}
     \label{fig:join}
+    \vspace{-5mm}
 \end{figure}
 
 
