@@ -318,12 +318,19 @@ render single VGA view. This allows us for simulating the camera with 2740 FPS.
 The other latency is a result of loading spherical photo from disk, decoding it and loading it into the memory of the video card.
 A single 5376 $\times$ 2688 pixels JPEG image takes on average $t = 198.672\,ms$ to load and decode on our system.
 This further limits the FPS to 5 if the images are loaded synchronously.
-Given a grid resolution of $d = 20\,cm$, if the images were loaded asynchronously and the path of the robot could not be predicted, the maximum velocity of the robot in simulation would be equal to $v_{max} = \frac{d / {2}}{2t} \approx 0.25 \frac{m}{s}$.
-However, if the path of the robot is known or can be predicted, the images can be loaded in advance, which would migitate the negative impact of the load latency on the robot's maximum speed.
-In this case $v_{max}$ depends on the amount of available memory.
-\todo[inline]{Tutaj można dopisać też coś o predykcji kierunku ruchu
-i ładowaniu zdjęć za wczasu (jeśli zostanie miejsce)}
+However, if the images can be loaded in advance, this would migitate the negative impact of the load latency on the robot's maximum speed.
+In this case simulated robot's maximum speed $v_{max}$ depends on the amount of primary memory.
 
+In order to achieve scaling $v_{max}$ with memory, one can utilise a pool of threads or processes.
+In this case an important problem is choosing which spherical images should be cached in RAM.
+The simplest strategy is to always store four images that were taken closest to the current position of the robot.
+Such a solution often loads many images that will not be used for simulation.
+A more sophisticated method would be to predict the movement of the robot.
+For example, robot's velocity vector could be projected forward until it intersects the border of a cell.
+Then, this image would be decoded and loaded in advance.
+
+With just one thread or process for decoding images, the grid resolution of $20 cm$ and image load time of $200 ms$, the theoretical aggregated speed limit of the simulated robot is equal to $1\,\frac{m}{s}$.
+According to TIAGo's datasheet \footnote{http://pal-robotics.com/wp-content/uploads/2019/07/Datasheet\_TIAGo\_Complete.pdf} this value coincides with real robot's maximum speed.
 
 \subsection{Grid resolution and interpolation parameters}
 
