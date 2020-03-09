@@ -27,6 +27,7 @@ img/drawio: img/drawio/main.pdf
 check:
 	languagetool \
 		-l en-US \
+		--disablecategories TYPOGRAPHY,PUNCTUATION,CASING \
 		<(detex main.tex)
 
 clean:
