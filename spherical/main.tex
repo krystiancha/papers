@@ -77,12 +77,12 @@ This creates the need to simulate the tested robot and, specifically, its one or
 \subsection{State of the art}
 An effective method of gathering image data for testing is recording a video while the robot is executing a given path in the testing environment for future use.
 Another way is using simulators such as Gazebo \cite{koenig2004design} or UnrealROX \cite{martinez2019unrealrox}.
-Gazebo is meant to be an universal simulator, with physics and 3D rendering engine. It allows for accurate 
+Gazebo is meant to be a universal simulator, with physics and 3D rendering engine. It allows for accurate 
 robots and environment modelling and robots behavior simulation. Its integration with the Robot Operating \
 System makes it very popular amongst the research and industry community. It is lacking the most in the vision 
 field. Although the 3D rendering is possible, environments created in the simulation are often filled
 with repetitive objects with very simple textures (fig.~\ref{fig:gazebo_vs_real}).
- Lighting system is also very simplified, withouth any 
+ Lighting system is also very simplified, without any 
 shadows and reflections, which makes the renders unsuitable for the vision algorithms evaluation. 
 
 \begin{figure}[!ht]
@@ -155,7 +155,7 @@ diagram of proposed system is presented on fig.~\ref{fig:flow}.
 The rest of the paper is structured as follows. In section~\ref{sec:spherical} we show the methods of creating
 a single photo from a spherical image. Following section introduces a way of dealing with robot movement.
 Integration with Gazebo simulator and merging with the rendered overlays is presented in section~\ref{sec:gazebo}.
-A case study for a prepared system is presented in section~\ref{sec:evaluation}, followed by the conlusions.
+A case study for a prepared system is presented in section~\ref{sec:evaluation}, followed by the conclusions.
 
 \begin{figure}[ht!]
 \includegraphics[width=\textwidth]{img/drawio/flow.pdf}
@@ -178,8 +178,8 @@ A case study for a prepared system is presented in section~\ref{sec:evaluation},
 
 %\subsection{Nomenclature}
 
-There are different camera types used throgh the article. A \textbf{spherical camera} is a type of camera with a field of view that covers the entire sphere and a \textbf{regular camera} is a type of camera with a field of view close to $90$ degrees.
-The camera that belongs to a robot in sumulation is referred to as a \textbf{virtual camera}.
+There are different camera types used through the article. A \textbf{spherical camera} is a type of camera with a field of view that covers the entire sphere and a \textbf{regular camera} is a type of camera with a field of view close to $90$ degrees.
+The camera that belongs to a robot in simulation is referred to as a \textbf{virtual camera}.
 A \textbf{projection camera} is an entity that projects a 3D scene to a 2D image in computer graphics.
 
 
@@ -255,18 +255,16 @@ This means that the same regular image would be produced for all the cameras.
 \end{figure}
 
 A simple solution to this problem would be to mimic the position of the virtual camera relative 
-to a region with the position of the projection camera thus creating the ilusion of moving closer 
+to a region with the position of the projection camera thus creating the illusion of moving closer 
 to certain objects as visualized in Fig.~\ref{fig:interpolation}b. This solution is not perfect,
 as there will be no parallax visible, but with the photos sampled sufficiently dense the effect is satisfactory.
-
-\todo[inline]{Można jeszcze dopisać kilka zdań o prefetchingu zdjęć (albo tutaj albo przy testach).}
 
 \section{Gazebo integration}
 \label{sec:gazebo}
 
 So far, the robot is able to look around and move through the prepared environment. 
 Generated images can be further processed in order to make this solution more versatile.
-As the position and orientation of vierual camera is known, and its parameters are the same
+As the position and orientation of virtual camera is known, and its parameters are the same
 as the projection camera, 3D view rendered in Gazebo can be overlaid onto the photo.
 Fig. \ref{fig:join} depicts an example of such process.
 In order to remove unwanted objects from the image additional plugin to the Gazebo simulator
@@ -318,11 +316,11 @@ render single VGA view. This allows us for simulating the camera with 2740 FPS.
 The other latency is a result of loading spherical photo from disk, decoding it and loading it into the memory of the video card.
 A single 5376 $\times$ 2688 pixels JPEG image takes on average $t = 198.672\,ms$ to load and decode on our system.
 This further limits the FPS to 5 if the images are loaded synchronously.
-However, if the images can be loaded in advance, this would migitate the negative impact of the load latency on the robot's maximum speed.
+However, if the images can be loaded in advance, this would mitigate the negative impact of the load latency on the robot's maximum speed.
 In this case simulated robot's maximum speed $v_{max}$ depends on the amount of primary memory.
 
-In order to achieve scaling $v_{max}$ with memory, one can utilise a pool of threads or processes.
-In this case an important problem is choosing which spherical images should be cached in RAM.
+To achieve scaling $v_{max}$ with memory, one can utilise a pool of threads or processes.
+Now an important problem is choosing which spherical images should be cached in RAM.
 The simplest strategy is to always store four images that were taken closest to the current position of the robot.
 Such a solution often loads many images that will not be used for simulation.
 A more sophisticated method would be to predict the movement of the robot.
@@ -335,7 +333,7 @@ According to TIAGo's datasheet \footnote{http://pal-robotics.com/wp-content/uplo
 \subsection{Grid resolution and interpolation parameters}
 
 Proper distance between consecutive photos is not easy to decide and depends on the
-actual environment. Photos captured to sparce will result in big jumps when camera
+actual environment. Photos captured to sparse will result in big jumps when camera
 moves between different grid points. Too dense and image loading and decoding
 times will limit the speed of the robot in simulation to unacceptable values.
 
