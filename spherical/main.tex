@@ -201,9 +201,9 @@ Those points can be selected by creating a UV Sphere.
 A UV Sphere consists of vertices that are created by performing angular steps in the spherical coordinate system (fig.~\ref{fig:spheres}a).
 Cartesian points are generated using these equations:
 \begin{equation}
-    x = R \cdot \sin \theta \cdot \cos \varphi \quad y = R \cdot \sin \theta \cdot \sin \varphi \quad z = R \cdot \cos \theta \nonumber
+    x = R \cdot \cos \phi \cdot \cos \theta \quad y = R \cdot \cos \phi \cdot \sin \theta \quad z = R \cdot \sin \phi \nonumber
 \end{equation}
-where $R$ is the radius of the sphere, $\theta \in [0, \pi]$ -- polar angle and $\varphi \in [0, 2\pi)$ -- azimuthal angle.
+where $R$ is the radius of the sphere, $\phi \in [0, \pi]$ -- polar angle and $\theta \in [0, 2\pi)$ -- azimuthal angle.
 
 Then the sphere has to be textured with the spherical image (fig.~\ref{fig:spheres}b).
 Most spherical cameras create images in the form of equirectangular projections, and, without the loss
@@ -211,24 +211,23 @@ of generality of the solution, we assumed images in that format are available.
 The process of texturing a UV sphere with an image in the form of this projection is fairly straightforward \cite{greene1986environment}. 
 Every point on the sphere can be mapped to a point on the texture using the following equations:
 % \begin{eqnarray}
-%     x_t &=& R(\varphi - \varphi_0) \cos \theta_1 \nonumber \\
-%     y_t &=& R(\theta - \theta_1)
+%     x_t &=& R(\theta - \varphi_0) \cos \phi_1 \nonumber \\
+%     y_t &=& R(\phi - \theta_1)
 % \end{eqnarray}
-% where $\varphi_0$, $\theta_1$ -- center coordinates.
-% Those equations can be simplified by assuming $\varphi_0 = 0$ and $\theta_1 = 0$.
+% where $\theta_0$, $\phi_1$ -- center coordinates.
+% Those equations can be simplified by assuming $\theta_0 = 0$ and $\phi_1 = 0$.
 % The sphere can also be assumed to be normalized ($R = 1$), which further simplifies the equations.
 \begin{equation}
-    x_t = \varphi \nonumber \quad y_t = \theta
+    x_t = \theta \nonumber \quad y_t = \phi
 \end{equation}
 
 Having textured the sphere, now a projection camera can be placed in its center (fig.~\ref{fig:spheres}c).
 Its parameters (field of view and resolution) are set to match the robot's virtual camera.
 The image from this camera is a regular image as seen by the robot looking in given direction.
-\todo{nanieść parametryzację na obrazki (?)}{}
 
 \begin{figure}[ht!]
     \centering
-    a) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/gl_sphere/white}
+    a) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/genpoint}
     b) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/gl_sphere/textured}
     c) \hspace{-3mm}\includegraphics[width=0.32\textwidth]{img/sphere}
     \caption{Creating regular image from the spherical photo}
