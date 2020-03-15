@@ -75,16 +75,16 @@ To speed up the process it is possible to run the application on multiple robots
 This creates the need to simulate the tested robot and, specifically, its one or more cameras.
 
 \subsection{State of the art}
-People use their sight as the most important sense when they move through their surroundings.
-It is, therefore, essential for service robots to use image processing.
-When robots coexist with humans, safety is highly important \cite{haddadin2007safety}.
-One of the many measures to be taken is software testing,
-which requires test data and, in the domain of computer vision, this data consists of images or videos from a robot's camera \cite{7759425}.
-However, using a real robot for testing can be dangerous.
-The danger stems from the fact that, while testing, the robot is controlled by yet untested software, which, in the case of service robots, can be complicated \cite{Dudek-multitasking-romoco-2019-twiki}. This can lead to damaging the environment, the robot itself, or in the worst-case scenario can harm the people.
-Using a real robot for testing can also be tedious -- after each test iteration, one has to return the environment to the initial state and move the robot back to the starting pose.
-To speed up the process, it is possible to run the application on multiple robots \cite{levine2018learning}, but this is not the cost-effective solution.
-This creates the need to simulate the tested robot and, specifically, its one or more cameras.
+
+A practical method of gathering image data for testing is recording a video while the robot is executing a given path in the testing environment for future use.
+Another way is using simulators such as Gazebo \cite{koenig2004design} or UnrealROX \cite{martinez2019unrealrox}.
+Gazebo is meant to be a universal simulator, with physics and 3D rendering engine. It allows for accurate 
+robots and environment modeling and robot behavior simulation. Its integration with the Robot Operating \
+System makes it very popular amongst the research and industry community. It lacks the most in the vision 
+field. Although the 3D rendering is possible, environments created in the simulation are often filled
+with repetitive objects with very simple textures (fig.~\ref{fig:gazebo_vs_real}).
+ The lighting system is also very simplified, without any 
+shadows and reflections, which makes the renders unsuitable for the vision algorithms evaluation. 
 
 \begin{figure}[!ht]
     \includegraphics[width=0.485\textwidth]{img/gazebo_vs_real/real.jpg}\hfill%
@@ -141,7 +141,7 @@ in tab.~\ref{tab:simulation_methods} we can see that fulfilling all the requirem
         \vspace*{1em}
         \caption{Comparison of different camera simulation methods}
         \label{tab:simulation_methods}
-\end{table}\vspace{-5mm}
+\end{table}
 
 \subsection{The solution}
 
@@ -354,7 +354,7 @@ The grid resolution of 20 cm provided a good balance between the quality of the 
     \includegraphics[width=0.33\textwidth]{img/grid_sizes/100}\\
     \caption{Example images generated with grid resolutions of 20, 100 and 200 cm.}
     \label{fig:grid_sizes}
-\end{figure}
+\end{figure}\vspace{-10mm}
 
 \subsection{Collecting photos of the target environment}
 
@@ -400,7 +400,7 @@ Finally, images from both sources were compared, as seen in Fig. \ref{fig:sim_vs
     \includegraphics[width=0.33\textwidth]{img/sim_vs_tiago/tia_kuchnia_blat.jpg}\\
     \caption{Images generated in simulation (top) and taken by the robot (bottom)}
     \label{fig:sim_vs_tiago}
-\end{figure}
+\end{figure}\vspace{-5mm}
 
 \section{Conclusions}
 
