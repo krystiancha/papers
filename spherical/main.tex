@@ -335,7 +335,7 @@ A more sophisticated method would be to predict the movement of the robot.
 For example, the robot's velocity vector could be projected forward until it intersects the border of a cell.
 Then, this image would be decoded and loaded in advance.
 
-With just one thread or process for decoding images, the grid resolution of $20 cm$ and image load time of $200 ms$, the theoretical aggregated speed limit of the simulated robot is equal to $1\,\frac{m}{s}$.
+With just one thread or process for decoding images, the grid resolution of $20\,cm$ and image load time of $200\,ms$, the theoretical aggregated speed limit of the simulated robot is equal to $1\,\frac{m}{s}$.
 According to TIAGo's datasheet, this value coincides with real robot's maximum speed.
 
 \subsection{Grid resolution and interpolation parameters}
@@ -384,7 +384,7 @@ To simplify the process and keep track of photos that are already taken and stil
 be captured, an application was created (Fig. \ref{fig:rig}).
 It allows for selecting points and sending requests to the camera for taking pictures using the
 Open Spherical Camera API. It also automatically tags the images with the correct position.
-In the selected room, 404 pictures were taken in $20 cm$ intervals, covering the living room part,
+In the selected room, 404 pictures were taken in $20\,cm$ intervals, covering the living room part,
 the kitchen, and part of the corridor. The whole process took 2 hours and 17 minutes,
 which yields approximately 3 pictures taken per minute. 
 
