@@ -16,8 +16,7 @@
 % for \textdegree symbol
 \usepackage{textcomp}
 
-% comments on the margin
-\usepackage{todonotes}
+\usepackage[plainpages=false,hypertexnames=false,pdfpagelabels]{hyperref} 
 
 \begin{document}
 \mainmatter
@@ -72,7 +71,9 @@ However, using a real robot for testing can be dangerous.
 The danger stems from the fact that, while testing, the robot is controlled by yet untested software, which, in case of service robots, can be complicated \cite{Dudek-multitasking-romoco-2019-twiki}. This can lead to damaging the environment, the robot itself or in the worst case scenario can harm the people.
 Using a real robot for testing can also be tedious -- after each test iteration one has to return the environment to the initial state and move robot back to the staring pose.
 To speed up the process it is possible to run the application on multiple robots \cite{levine2018learning}, but this is not the cost-effective solution.
-This creates the need to simulate the tested robot and, specifically, its one or more cameras.
+This creates the need to simulate the tested robot and, specifically, its one or more cameras. 
+In this article, we examine the existing robotic simulators as a tool for testing vision algorithms and propose
+their extension with the use of spherical images.
 
 \subsection{State of the art}
 
@@ -156,7 +157,7 @@ a way of adding the simulated/rendered objects to the scenes. This will also all
 diagram of the proposed system is presented in fig.~\ref{fig:flow}.
 
 \begin{figure}[ht!]
-\includegraphics[width=\textwidth]{img/drawio/flow.pdf}
+\includegraphics{img/dataflow.pdf}
 \caption{Schematic diagram of the proposed simulation system}
 \label{fig:flow}
 \end{figure}
@@ -192,8 +193,7 @@ A \textbf{projection camera} is an entity that projects a 3D scene to a 2D image
 \label{sec:spherical}
 
 In order to transform a spherical image into a regular image, one can utilize 3D computer graphics.
-Not only is this method simple, but its implementation can utilize hardware acceleration, unlike other solutions. 
-
+Not only is this method simple, but its implementation can utilize hardware acceleration.
 A sphere is a 3D closed surface where every point on the sphere is the same distance from its origin. % The equation of a sphere with center at point $(x_0, y_0, z_0)$ and radius $R$ is as follows:
 % \begin{equation}
 %     (x - x_0)^2 + (y - y_0)^2 + (z - z_0)^2 = R^2
@@ -262,14 +262,16 @@ to a region with the position of the projection camera, thus creating the illusi
 to certain objects as visualized in Fig.~\ref{fig:interpolation}b. This solution is not perfect,
 as there will be no parallax visible, but with the photos sampled sufficiently dense the effect is satisfactory.
 
-\section{Gazebo integration}
+\section{3D objects overlay}
 \label{sec:gazebo}
 
 So far, the robot can look around and move through the prepared environment. 
 Generated images can be further processed in order to make this solution more versatile.
 As the position and orientation of virtual camera is known, and its parameters are the same
-as the projection camera, 3D view rendered in Gazebo can be overlaid onto the photo.
+as the projection camera, objects generated using 3D rendering software can be overlaid onto the photo.
 Fig. \ref{fig:join} depicts an example of such a process.
+
+In our solution, we decided to stick with the Gazebo simulator for this purpose.
 In order to remove unwanted objects from the image, additional plugin to the Gazebo simulator
 was prepared to hide the objects from rendering in a virtual camera, keeping them 
 visible for other sensors (like laser scanner or sonars), thus keeping the obstacle avoidance
@@ -279,14 +281,16 @@ of the simulated robot with the environment utilizing the Gazebo simulator.
 
 \begin{figure}[!ht]
     \centering
-        \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/sim.jpg}\hfill%
-        \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/gazebo.jpg}\hfill%
-        \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/sum.jpg}\\
-        \hfill (a) \hfill\hfill (b) \hfill\hfill (c) \hfill~
+        % \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/sim.jpg}\hfill%
+        % \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/gazebo.jpg}\hfill%
+        % \includegraphics[width=0.33\textwidth,trim=29cm 2cm 0 10cm,clip]{img/gazebo_integration/sum.jpg}\\
+        % \hfill (a) \hfill\hfill (b) \hfill\hfill (c) \hfill~
+        \includegraphics{img/gazebo_integration/img.pdf}
     \caption{Adding virtual objects (b) to the generated images (a)}
     \label{fig:join}
     \vspace{-5mm}
 \end{figure}
+
 
 
 \section{Evaluation}
@@ -294,7 +298,7 @@ of the simulated robot with the environment utilizing the Gazebo simulator.
 
 The simulation system presented above was tested in our robotics laboratory. At first, individual modules
 and system parameters were evaluated, followed by the partial scan of the room. Prepared environment is 
-meant to be used with the Tiago robot applied to service tasks related to elderly care and assistance.
+meant to be used with the TIAGo robot applied to service tasks related to Elderly care and assistance.
 
 \subsection{Camera selection}
 
@@ -315,7 +319,7 @@ All the advantages of even the most advanced and photorealistic simulation are u
 doesn't allow for (near)real-time work. There are two independent factors in photo rendering that can limit
 the simulation performance. When the robot moves inside a single cell (in range of a single spherical
 photo), only the rendering time is important. For our system, it takes on average 0.365 ms to
-render a single VGA view. This allows us to simulate the camera with 2740 FPS.
+render a single VGA view. This allows us to simulate the camera with 2740 FPS. 
 
 The other latency is a result of loading the spherical photo from disk, decoding it, and loading it into the memory of the video card.
 A single 5376 $\times$ 2688 pixels JPEG image takes on average $t = 198.672\,ms$ to load and decode on our system.
@@ -354,9 +358,9 @@ The grid resolution of 20 cm provided a good balance between the quality of the 
     \includegraphics[width=0.33\textwidth]{img/grid_sizes/100}\\
     \caption{Example images generated with grid resolutions of 20, 100 and 200 cm.}
     \label{fig:grid_sizes}
-\end{figure}\vspace{-10mm}
+\end{figure}
 
-\subsection{Collecting photos of the target environment}
+\subsection{Collecting the photos of the target environment}
 
 Finally, when all the parameters are selected, a set of spherical images can be created.
 To facilitate the whole process, we've created helper hardware and software.
@@ -388,7 +392,9 @@ The whole solution was evaluated by comparing generated images with images from 
 For this purpose, the TIAGo robot was used.
 It was booted up and manually controlled in order to take pictures.
 Then the proposed solution was used to generate images corresponding to pictures taken by the TIAGo.
-Finally, images from both sources were compared, as seen in Fig. \ref{fig:sim_vs_tiago}.
+Finally, images from both sources were compared, as seen in Fig. \ref{fig:sim_vs_tiago}. The images 
+differ mainly in color appearance and are otherwise nearly identical. The mentioned color issue can 
+be resolved by the means of color correction.
 
 \begin{figure}[!ht]
     \centering
@@ -406,25 +412,25 @@ Finally, images from both sources were compared, as seen in Fig. \ref{fig:sim_vs
 
 The article presented the idea and application for the spherical camera-based 
 simulator for service robots. The system was tested by comparing images generated in simulation
-with those gathered by the real robot. The images differ mainly in color appearance 
-and are otherwise nearly identical. The mentioned color issue can be resolved by the 
-means of color correction. Those results prove that using the proposed solution a set 
+with those gathered by the real robot. Those results prove that using the proposed solution a set 
 of spherical images can be used to replace a real robot in software testing.
+One important feature of presented system is that it doesn't replace existing simulators,
+but rather coexists with them and provides additional features.
 Presented system in its current form can be utilized to test the robotic vision algorithms
 involving visual inspection \cite{mmar_winiarski_automated-2016} or even objects
-grasping \cite{seredynski2016fast} when the 3D overlays are used.
+grasping \cite{seredynski2016fast} when the 3D overlays are used. 
 
 There are some issues in the system that can be improved. The process of photo acquisition
 at the moment is highly manual labor. For each photo, one has to move the camera, hide from
-the camera view, and gather a photo. In its current form, it takes around 8 minutes per square meter.
+the camera view, and capture a photo. In its current form, it takes around 8 minutes per square meter.
 The natural extension would be to utilize a robotic platform to move the camera around and
-take photos automatically.
+take photos automatically. 
 
 Manual photo capturing results also in slight misalignments between consecutive frames.
 Photo stabilization techniques could be implemented to calculate angular offsets for each
 image.
 
-Created photo collection can also be extended with depth information calculated from multiview
+Created photo collection could be extended with depth information calculated from multiview
 structure estimation. This would make the interpolation process work better and allow for, 
 possibly, grid with bigger steps.
 
