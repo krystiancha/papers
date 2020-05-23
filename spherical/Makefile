@@ -1,9 +1,9 @@
 .PHONY: all, img/drawio
 SHELL := /bin/bash
 
-all: build/main.pdf
+all: build/spherical.pdf
 
-build/main.pdf: main.tex
+build/spherical.pdf: spherical.tex
 	latexmk -pdf -output-directory=build
 
 img/drawio: img/drawio/main.pdf
@@ -28,7 +28,7 @@ check:
 	languagetool \
 		-l en-US \
 		--disablecategories TYPOGRAPHY,PUNCTUATION,CASING \
-		<(detex main.tex)
+		<(detex spherical.tex)
 
 clean:
 	latexmk -C -pdf -output-directory=build

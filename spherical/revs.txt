@@ -1,0 +1,31 @@
+****************************************
+Reviewer #1 Comments
+****************************************
+In the present manuscript, the authors describe their experience with using the spherical camera for the robot testing in the simulation environment.
+
+Furthermore, the paper has some major flaws that the referee points out next.
+
+1 The paper title is misleading, it should be more concise
+
+2. The authors stated:” The system was tested by comparing images generated in simulation with those gathered by the real robot.” It should be clearly described what metrics for evaluation were chosen.
+
+3. The contribution of the paper needs to be stated clearly
+
+4. In the conclusion section, the author stated: “Those results prove that using the proposed solution a set of spherical images can be used to replace a real robot in software testing.” But in the section Rendering performance mentioned:” A single 5376 × 2688 pixels JPEG image takes on average t = 198.672 ms to load and decode on our system. This further limits the FPS to 5 if the images are loaded synchronously.” 5 FPS is far not enough for real-time robot testing.
+
+****************************************
+Reviewer #2 Comments
+****************************************
+This s an interesting paper about a robot simulator based on a spherical camera. I found the paper abounding in interesting information.
+I’m not sure if the reference list is exhaustive as there are hundreds of papers on spherical camera and robots. The same is with stating clearly the novelty of the solution.
+The paper is generally well-written. I would advise to carefully check the paper as I found some possible minor errors. I’m not a native speaker so I could be wrong with these examples:
+
+with existing robotic simulator.
+in (the) case of service robots <- e.g. in case of fire
+the robot itself(,) or in the worst(-)case scenario
+move (the) robot back to the staring pose <- or starting
+Using the 3D simulators gives (the) possibility of
+generated using these equations: <- without „:”
+Then(comma) the sphere has to be textured with the spherical
+feature of (the) presented system
+that it doesn’t replace <- we tend not to use contractions but it’s changing now
